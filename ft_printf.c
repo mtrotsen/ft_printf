@@ -10,14 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "ft_printf.h"
+
 int		ft_printf(const char *format, ...)
 {
-	int i;
+	va_list	ap;
+	char	*count;
+	int		i;
 
 	i = 0;
+	va_start(ap, format);
+	
 	while (format[i] != '\0')
-	{
 		i++;
-	}
 	return (i);
 }
