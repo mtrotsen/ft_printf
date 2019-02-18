@@ -16,6 +16,14 @@
 # include <stdio.h>
 # include <stdarg.h>
 
-int		ft_printf(const char *format, ...);
+typedef struct	s_args
+{
+	int			i;
+	int			num;
+	int			bum;
+}				t_args;
+
+int				ft_printf(const char *format, ...);
+void			ft_print_to_procent(const char *format, t_args *args);
 
 #endif

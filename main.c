@@ -24,9 +24,19 @@ int		main(void)
 		printf("ASCII number: %d Character: %c\n", tst, tst);
 		tst++;
 	}*/
-	printf("%-#012.12hd\n", 1);
-	printf("%d\n", ft_printf("%-#012.12hd\n", 1));
-	printf("%d\n", printf("%-#012.12hd\n", 1));
+	/*printf("%-#012.12hd\n", 1);
+	printf("%d\n", ft_printf("Print this %-#012.12hd\n ", 1));
+	printf("%d\n", printf("Print this %-#012.12hd\n ", 1));
+	printf("%12.12c\n", 'c');*/
+	//printf("%%");
+	printf("Print this boi \n");
+	ft_printf("Print this boi \n");
+	printf("Print this boi %%\n");
+	ft_printf("Print this boi %%\n");
+	printf("Print this boi %c\n", 'c');
+	ft_printf("Print this boi %c\n", 'c');
+	printf("Print this boi %10c\n", 'c');
+	ft_printf("Print this boi %10c\n", 'c');
 	/*printf("%12d\n", tst);
 	printf("%012d\n", tst);
 	printf("% 012d\n", tst);
