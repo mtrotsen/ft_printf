@@ -29,14 +29,31 @@ int		main(void)
 	printf("%d\n", printf("Print this %-#012.12hd\n ", 1));
 	printf("%12.12c\n", 'c');*/
 	//printf("%%");
-	printf("Print this boi \n");
-	ft_printf("Print this boi \n");
+	//printf("%.2d\n", 123456);
+	/*printf("%5d\n", 1);
+	printf("%5c\n", 'c');*/
+	printf("Print this boi %\n");
+	ft_printf("Print this boi %\n");
 	printf("Print this boi %%\n");
 	ft_printf("Print this boi %%\n");
 	printf("Print this boi %c\n", 'c');
 	ft_printf("Print this boi %c\n", 'c');
-	printf("Print this boi %10c\n", 'c');
-	ft_printf("Print this boi %10c\n", 'c');
+	printf("Print this boi %010c\n", 'c');
+	ft_printf("Print this boi %010c\n", 'c');
+	printf("Print this boi %-010c\n", 'c');
+	ft_printf("Print this boi %-010c\n", 'c');
+	printf("Print this boi %-10c\n", 'c');
+	ft_printf("Print this boi %-10c\n", 'c');
+	printf("Print this boi %10c\n yeah boiiiiiii\n", 'c');
+	ft_printf("Print this boi %10c\n yeah boiiiiiii\n", 'c');
+	/*printf("\n");
+	printf("\n");
+	printf("Print this boi %-10c\n yeah boiiiiiii", 'c');
+	printf("Print this boi %-10c\n yeah boiiiiiii", 'c');
+	printf("\n");
+	printf("\n");
+	ft_printf("Print this boi %c\n yeah boiiiiiii", 'c');
+	ft_printf("Print this boi %c\n yeah boiiiiiii", 'c');*/
 	/*printf("%12d\n", tst);
 	printf("%012d\n", tst);
 	printf("% 012d\n", tst);

@@ -19,29 +19,26 @@ void	ft_putspaces(t_args *args)
 	i = 0;
 	while (i < args->num)
 	{
-		ft_putchar(' ');
+		ft_putchar(args->pref);
 		i++;
 	}
 }
 
 void	ft_print_to_procent(const char *format, t_args *args)
 {
-	int		i;
 	char	*chr;
 
 	chr = (char *)format;
-	i = 0;
-	while (chr[i] != '%' && chr[i] != '\0' && chr[i] != '\n')
+	while (chr[args->i] != '%' && chr[args->i] != '\0')
 	{
-		ft_putchar(chr[i]);
-		i++;
+		ft_putchar(chr[args->i]);
+		args->i++;
 	}
-	args->i = i;
 }
 
 void	ft_find_arg(const char *format, va_list ap, t_args *args)
 {
-	char	c;
+	char	c = va_arg(ap, int);
 	char	*str;
 	int		j;
 
@@ -53,6 +50,16 @@ void	ft_find_arg(const char *format, va_list ap, t_args *args)
 			args->i++;
 			ft_putchar('%');
 		}
+		args->i++;
+	}
+	if (format[args->i] == '-')
+	{
+		args->sign = '-';
+		args->i++;
+	}
+	if (format[args->i] == '0')
+	{
+		args->pref = '0';
 		args->i++;
 	}
 	if (format[args->i] >= '0' && format[args->i] <= '9')
@@ -73,17 +80,45 @@ void	ft_find_arg(const char *format, va_list ap, t_args *args)
 		}
 		str[j] = '\0';
 		args->num = ft_atoi(str);
-		ft_putspaces(args);
-		printf("%c\n", format[args->i]);
+		//printf("%c\n", format[args->i]);
 	}
 	if (format[args->i] == 'c')
 	{
-		c = (char) va_arg(ap, int);
+		//ft_putendl("1");
+		//ft_putchar((char)va_arg(ap, int));
+		//printf("%c\n", format[args->i]);
+		//c = va_arg(ap, int);
+		//printf("%c\n", format[args->i]);
+		//printf("%c\n", c);
+		args->chrn++;
+		args->num = args->num - args->chrn;
+	if (args->num < 0)
+		args->num = 0;
+	if (args->sign == '-')
+	{
+		args->pref = ' ';
 		ft_putchar(c);
+		ft_putspaces(args);
+	}
+	else
+	{
+		ft_putspaces(args);
+		ft_putchar(c);
+	}
 		args->i++;
+		
 	}
 	if (format[args->i] == '\n')
+	{
 		ft_putchar('\n');
+		args->i++;
+	}
+	if (format[args->i] != '\0')
+	{
+		ft_print_to_procent(format, args);
+		if (format[args->i] != '\0')
+			ft_find_arg(format, ap, args);
+	}
 }
 
 int		ft_printf(const char *format, ...)
@@ -94,6 +129,9 @@ int		ft_printf(const char *format, ...)
 	int		i;
 
 	i = 0;
+	args->pref = ' ';
+	args->chrn = 0;
+	args->i = 0;
 	va_start(ap, format);
 	ft_print_to_procent(format, args);
 	ft_find_arg(format, ap, args);

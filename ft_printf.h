@@ -21,6 +21,9 @@ typedef struct	s_args
 	int			i;
 	int			num;
 	int			bum;
+	int			chrn;
+	char		pref;
+	char		sign;
 }				t_args;
 
 int				ft_printf(const char *format, ...);
