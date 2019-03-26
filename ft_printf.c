@@ -10,114 +10,78 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libftprintf.h"
 
-void	ft_putspaces(t_args *args)
+void	ft_branch(t_args *args, va_list ap, const char *format)
 {
-	int		i;
-
-	i = 0;
-	while (i < args->num)
-	{
-		ft_putchar(args->pref);
-		i++;
-	}
+	if (format[args->i] == '%')
+		distribute_percent(args, ap);
+	if (format[args->i] == 'c')
+		distribute_c(args, ap);
+	if (format[args->i] == 's')
+		distribute_s(args, ap);
+	if (format[args->i] == 'p')
+		distribute_p(args, ap);
+	if (format[args->i] == 'd' || format[args->i] == 'i')
+		distribute_di(args, ap);
+	if (format[args->i] == 'x')
+		distribute_x(args, ap);
+	if (format[args->i] == 'X')
+		distribute_xx(args, ap);
+	if (format[args->i] == 'u')
+		distribute_u(args, ap);
+	if (format[args->i] == 'o')
+		distribute_o(args, ap);
+	if (format[args->i] == 'f')
+		distribute_f(args, ap);
 }
 
-void	ft_print_to_procent(const char *format, t_args *args)
+void	ft_moveft(const char *format, t_args *args)
 {
-	char	*chr;
-
-	chr = (char *)format;
-	while (chr[args->i] != '%' && chr[args->i] != '\0')
-	{
-		ft_putchar(chr[args->i]);
-		args->i++;
-	}
+	if (format[args->i] == ' ')
+		args->space = 'y';
+	if (format[args->i] == '-')
+		args->sign = '-';
+	if (format[args->i] == '0')
+		args->pref = '0';
+	if (format[args->i] == '+')
+		args->plus = '+';
+	if (format[args->i] == '#')
+		args->hash = '#';
+	if (format[args->i] == 'h' && format[(args->i + 1)] != 'h')
+		args->h = 1;
+	if (format[args->i] == 'h' && format[(args->i + 1)] == 'h')
+		HH(args->hh, args->i);
+	if (format[args->i] == 'l' && format[(args->i + 1)] != 'l')
+		args->l = 1;
+	if (format[args->i] == 'l' && format[(args->i + 1)] == 'l')
+		LL(args->ll, args->i);
+	if (format[args->i] == 'L')
+		args->bigl = 1;
+	ft_width(format, args);
+	ft_precision(format, args);
 }
 
 void	ft_find_arg(const char *format, va_list ap, t_args *args)
 {
-	char	c = va_arg(ap, int);
-	char	*str;
-	int		j;
-
-	j = 0;
-	if (format[args->i] == '%')
+	while ((format[args->i] != '\0') && (format[args->i] == '%' || \
+		format[args->i] == ' ' || format[args->i] == '-' || \
+		format[args->i] == '0' || format[args->i] == '+' || \
+		format[args->i] == '#' || format[args->i] == 'h' || \
+		format[args->i] == 'l' || format[args->i] == 'L' || \
+		(format[args->i] >= '1' && format[args->i] <= '9') || \
+		format[args->i] == '.' || format[args->i] == '\n' || \
+		format[args->i] == 'c' || format[args->i] == 's' || \
+		format[args->i] == 'p' || format[args->i] == 'd' || \
+		format[args->i] == 'i' || format[args->i] == 'x' || \
+		format[args->i] == 'X' || format[args->i] == 'u' || \
+		format[args->i] == 'o' || format[args->i] == 'f'))
 	{
-		if (format[(args->i + 1)] == '%')
-		{
-			args->i++;
-			ft_putchar('%');
-		}
-		args->i++;
-	}
-	if (format[args->i] == '-')
-	{
-		args->sign = '-';
-		args->i++;
-	}
-	if (format[args->i] == '0')
-	{
-		args->pref = '0';
-		args->i++;
-	}
-	if (format[args->i] >= '0' && format[args->i] <= '9')
-	{
-		args->bum = args->i;
-		while (format[args->i] >= '0' && format[args->i] <= '9')
-		{
-			args->i++;
-			j++;
-		}
-		str = malloc(sizeof(char) * j);
-		j = 0;
-		while (args->bum < args->i)
-		{
-			str[j] = format[args->bum];
-			args->bum++;
-			j++;
-		}
-		str[j] = '\0';
-		args->num = ft_atoi(str);
-		//printf("%c\n", format[args->i]);
-	}
-	if (format[args->i] == 'c')
-	{
-		//ft_putendl("1");
-		//ft_putchar((char)va_arg(ap, int));
-		//printf("%c\n", format[args->i]);
-		//c = va_arg(ap, int);
-		//printf("%c\n", format[args->i]);
-		//printf("%c\n", c);
-		args->chrn++;
-		args->num = args->num - args->chrn;
-	if (args->num < 0)
-		args->num = 0;
-	if (args->sign == '-')
-	{
-		args->pref = ' ';
-		ft_putchar(c);
-		ft_putspaces(args);
-	}
-	else
-	{
-		ft_putspaces(args);
-		ft_putchar(c);
-	}
-		args->i++;
-		
-	}
-	if (format[args->i] == '\n')
-	{
-		ft_putchar('\n');
-		args->i++;
-	}
-	if (format[args->i] != '\0')
-	{
-		ft_print_to_procent(format, args);
-		if (format[args->i] != '\0')
-			ft_find_arg(format, ap, args);
+		IF(format[args->i], args->percent, args, ap, format);
+		ft_moveft(format, args);
+		BRANCH(format[args->i], args, ap, format, args->percent);
+		SLASHN(format[args->i], args->i, args->endin, args->percent);
+		EXIT(format[args->i], args->i, args->percent, args->endin);
 	}
 }
 
@@ -125,18 +89,23 @@ int		ft_printf(const char *format, ...)
 {
 	va_list	ap;
 	t_args	*args;
-	char	*count;
 	int		i;
 
 	i = 0;
-	args->pref = ' ';
-	args->chrn = 0;
-	args->i = 0;
+	if (!(args = malloc(sizeof(t_args))))
+		return (0);
+	CHARSS(args->pref, args->dot, args->plus, args->hash, args->sign);
+	CHARRS(args->percent, args->space, args->ind, args->fsign, args->remnum);
+	CHAARS(args->forf, args->dott, args->chrn, args->num, args->i);
+	CHHARS(args->endin, args->h, args->hh, args->l, args->ll, args->bigl);
 	va_start(ap, format);
-	ft_print_to_procent(format, args);
-	ft_find_arg(format, ap, args);
-	while (format[i] != '\0')
-		i++;
+	while (format[args->i] != '\0')
+	{
+		ft_print_to_procent(format, args);
+		if (format[args->i] == '%')
+			ft_find_arg(format, ap, args);
+	}
 	va_end(ap);
-	return (i);
+	free(args);
+	return (args->endin);
 }
